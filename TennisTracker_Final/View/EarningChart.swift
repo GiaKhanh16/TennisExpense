@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Charts
+import SwiftData
 
 struct EarningTotal: Identifiable {
 	 let id = UUID()
@@ -18,12 +19,29 @@ struct EarningTotal: Identifiable {
 
 
 struct EarningChart: View {
+	 @Query var earnings: [Earning]
 	 let dateRange: DateRange
+
+
+
+
 	 var filteredList: [Earning] {
-			sampleEarnings.filter {
-				 $0.date >= dateRange.startTime && $0.date <= dateRange.endTime
+			earnings.filter { earning in
+				 earning.date >= dateRange.startTime && earning.date <= dateRange.endTime
 			}
 	 }
+
+	 init(dateRange: DateRange) {
+			self.dateRange = dateRange
+
+			self._earnings = Query(sort: [
+				 SortDescriptor(\Earning.date, order: .reverse)
+			], animation: .snappy)
+	 }
+
+
+
+
 
 	 var tourneyTotal: Double {
 			filteredList.filter { $0.category == .tourney }.reduce(0) { $0 + $1.amount }

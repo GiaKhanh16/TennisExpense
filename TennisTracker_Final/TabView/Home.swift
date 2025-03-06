@@ -41,16 +41,24 @@ class DateRange {
 
 
 struct Home: View {
+	 @State var tabSelection: String = "Expenses"
+	 @State private var showingNewSheet = false
+	 @State var showPopo: Bool = false
+	 @State private var path = [Expense]()
+	 @Environment(\.modelContext) var modelContext
 	 @State private var dateRange = DateRange()
+	 @Query var expenses: [Expense]
+	 @State private var selectedExpense: Expense?
+	 @State private var selectedEarning: Earning?
+
 	 var height = UIScreen.main.bounds.height
 	 let category: [String] = ["Expenses", "Earnings"]
-	 @State var tabSelection: String = "Expenses"
-	 @State private var showingEditSheet = false
-	 @State var showPopo: Bool = false
+
 
 
 	 var body: some View {
-			NavigationStack {
+			NavigationStack(path: $path) {
+
 				 VStack {
 						VStack(spacing: 30) {
 							 Spacer().frame(height: 70)
@@ -81,9 +89,14 @@ struct Home: View {
 						.offset(y: -10)
 
 						if tabSelection == "Expenses" {
-							 ListView(dateRange: dateRange)
+							 ListView(dateRange: dateRange, onItemTap: { expense in
+									selectedExpense = expense
+							 })
 						} else {
-							 EarningView(dateRange: dateRange)
+							 EarningView(dateRange: dateRange, onItemTap: { earning in
+//									showingEditSheet = true
+									selectedEarning = earning
+							 })
 						}
 				 }
 				 .onChange(of: tabSelection) { _, _ in
@@ -93,11 +106,38 @@ struct Home: View {
 				 .navigationTitle(
 						tabSelection == "Expenses" ? "Expenses" : "Earnings"
 				 )
+
 				 .navigationBarTitleDisplayMode(.inline)
+				 .sheet(item: $selectedExpense) { expense in
+						editExpense(isNewExpense: false, expense: expense)
+				 }
+				 .sheet(item: $selectedEarning) { earning in
+						editEarning(isNewExpense: false, earning: earning)
+				 }
+				 .sheet(isPresented: $showingNewSheet) {
+						if tabSelection == "Expenses" {
+							 editExpense(isNewExpense: true, expense: Expense(
+									title: "",
+									subtitle: "",
+									date: .now,
+									amount: 0,
+									category: .equipment
+							 ))
+						} else {
+							 editEarning(isNewExpense: true, earning: Earning(
+									title: "",
+									subtitle: "",
+									date: .now,
+									amount: 0,
+									category: .sponsor
+							 ))
+						}
+				 }
+
 				 .toolbar {
 						ToolbarItem(placement: .navigationBarLeading) {
 							 Button {
-									showingEditSheet = true
+									showingNewSheet.toggle()
 							 } label: {
 									Image(systemName: "plus.rectangle.portrait.fill")
 										 .resizable()
@@ -105,6 +145,7 @@ struct Home: View {
 										 .padding(.horizontal,10)
 							 }
 						}
+
 						ToolbarItem(placement: .navigationBarTrailing) {
 							 Button {
 									showPopo.toggle()
@@ -146,40 +187,120 @@ struct Home: View {
 							 })
 						}
 				 }
-				 .sheet(isPresented: $showingEditSheet) {
-						if tabSelection == "Expenses" {
-							 editExpense(expense: Expense(
-									title: "",
-									subtitle: "",
-									date: .now,
-									amount: 0,
-									category: .equipment
-							 ))
-						} else {
-							 editEarning(earning: Earning(
-									title: "",
-									subtitle: "",
-									date: .now,
-									amount: 0,
-									category: .sponsor
-							 ))
+			}
+	 }
+}
+struct ListView: View {
+	 @Environment(\.modelContext) var modelContext
+	 @Query var expenses: [Expense]
+	 let dateRange: DateRange
+	 let onItemTap: (Expense) -> Void
+
+	 var filteredExpenses: [Expense] {
+			expenses.filter { expense in
+				 expense.date >= dateRange.startTime && expense.date <= dateRange.endTime
+			}
+	 }
+
+	 init(dateRange: DateRange, onItemTap: @escaping (Expense) -> Void) {
+			self.dateRange = dateRange
+			self.onItemTap = onItemTap
+
+			self._expenses = Query(sort: [
+				 SortDescriptor(\Expense.date, order: .reverse)
+			], animation: .snappy)
+
+
+	 }
+
+	 var body: some View {
+			VStack {
+				 List{
+						ForEach(filteredExpenses){ item in
+							 VStack {
+									HStack {
+										 HStack (spacing:10) {
+												Text(categoryIcon(for: item.category))
+													 .font(.system(size: 35))
+												VStack(alignment: .leading, spacing: 3) {
+													 Text(item.title)
+															.font(.headline)
+															.fontWeight(.semibold)
+													 Text(item.subtitle)
+															.font(.subheadline)
+															.foregroundStyle(Color(red: 0.4627, green: 0.8392, blue: 1.0))
+													 Text(item.date, style: .date)
+															.font(.caption)
+															.foregroundColor(.gray)
+												}
+												Spacer()
+												Text("$\(item.amount, specifier: "%.2f")")
+													 .font(.subheadline)
+													 .fontWeight(.semibold)
+										 }
+									}
+							 }
+							 .contentShape(Rectangle())
+							 .onTapGesture {
+									onItemTap(item) // Trigger callback when tapped
+							 }
 						}
+						.onDelete(perform: onDeletion)
+						.listRowBackground(Color.gray60.opacity( 0.2))
 				 }
+				 .scrollContentBackground(.hidden)
+				 .contentMargins(.top, 0)
+				 .scrollIndicators(.hidden)
+				 .padding(.bottom, 65)
+			}
+			.frame(maxWidth: .infinity)
+	 }
+
+
+
+	 func onDeletion(_ offSet: IndexSet) {
+			for index in offSet {
+				 let item = filteredExpenses[index]
+				 modelContext.delete(item)
+			}
+		try?	modelContext.save()
+	 }
+
+	 func categoryIcon(for category: ExpenseCategory) -> String {
+			switch category {
+				 case .travelingHousing: return "🏨"
+				 case .equipment: return "🎾"
+				 case .training: return "🏃"
+				 case .tournament: return "📝"
 			}
 	 }
 }
 
+
 struct EarningView: View {
+	 @Environment(\.modelContext) var modelContext
+	 @Query var earnings: [Earning]
 	 let dateRange: DateRange
-	 var filteredList: [Earning] {
-			sampleEarnings.filter {
-				 $0.date >= dateRange.startTime && $0.date <= dateRange.endTime
+	 let onItemTap: (Earning) -> Void
+
+	 var filteredEarnings: [Earning] {
+			earnings.filter { earning in
+				 earning.date >= dateRange.startTime && earning.date <= dateRange.endTime
 			}
+	 }
+
+	 init(dateRange: DateRange, onItemTap: @escaping (Earning) -> Void) {
+			self.dateRange = dateRange
+			self.onItemTap = onItemTap
+
+			self._earnings = Query(sort: [
+				 SortDescriptor(\Earning.date, order: .reverse)
+			], animation: .snappy)
 	 }
 	 var body: some View {
 			VStack {
 				 List{
-						ForEach(filteredList){ item in
+						ForEach(filteredEarnings){ item in
 							 VStack {
 									HStack {
 										 HStack (spacing:10) {
@@ -204,6 +325,10 @@ struct EarningView: View {
 
 									}
 							 }
+							 .contentShape(Rectangle())
+							 .onTapGesture {
+									onItemTap(item) // Trigger callback when tapped
+							 }
 						}
 						.onDelete(perform: onDeletion)
 						.listRowBackground(Color.gray60.opacity( 0.2))
@@ -221,9 +346,12 @@ struct EarningView: View {
 
 	 func onDeletion(_ offSet: IndexSet) {
 			for index in offSet {
-				 sampleEarnings.remove(at: index)
+				 let item = filteredEarnings[index]
+				 modelContext.delete(item)
 			}
+			try? modelContext.save()
 	 }
+
 	 func categoryIcon(for category: EarningCategory) -> String {
 			switch category {
 				 case .tourney: return "🏨"
@@ -236,152 +364,6 @@ struct EarningView: View {
 
 
 
-
-struct ListView: View {
-	 let dateRange: DateRange
-	 var filteredList: [Expense] {
-			sampleExpenses.filter {
-				 $0.date >= dateRange.startTime && $0.date <= dateRange.endTime
-			}
-	 }
-	 @State var filteredExpense: [Expense] = []
-	 var body: some View {
-			VStack {
-				 List{
-						ForEach(filteredList){ item in
-							 VStack {
-									HStack {
-										 HStack (spacing:10) {
-												Text(categoryIcon(for: item.category))
-													 .font(.system(size: 35))
-												VStack(alignment: .leading, spacing: 3) {
-													 Text(item.title)
-															.font(.headline)
-															.fontWeight(.semibold)
-													 Text(item.subtitle)
-															.font(.subheadline)
-															.foregroundStyle(Color(red: 0.4627, green: 0.8392, blue: 1.0))
-													 Text(item.date, style: .date)
-															.font(.caption)
-															.foregroundColor(.gray)
-												}
-												Spacer()
-												Text("$\(item.amount, specifier: "%.2f")")
-													 .font(.subheadline)
-													 .fontWeight(.semibold)
-										 }
-
-									}
-							 }
-						}
-						.onDelete(perform: onDeletion)
-						.listRowBackground(Color.gray60.opacity( 0.2))
-				 }
-						//										 .onAppear {
-						//												filteredExpense = sampleExpenses
-						//										 }
-						//										 .onChange (of: selectDate) {
-						//												filteredExpense = sampleExpenses.filter { $0.date >= selectDate && $0.date <= endDate}
-						//										 }
-						//										 .onChange (of: endDate) {
-						//												filteredExpense = sampleExpenses.filter { $0.date >= selectDate && $0.date <= endDate}
-						//										 }
-				 .scrollContentBackground(.hidden)
-				 .contentMargins(.top, 0)
-				 .scrollIndicators(.hidden)
-				 .padding(.bottom, 65)
-			}
-			.frame(maxWidth: .infinity)
-	 }
-
-
-	 struct EarningView: View {
-				 //			let earnings: [Earning]
-			@State var filteredList: [Earning] = []
-
-
-			var body: some View {
-				 VStack {
-						List{
-							 ForEach(filteredList){ item in
-									VStack {
-										 HStack {
-												HStack (spacing:10) {
-													 Text(categoryIcon(for: item.category))
-															.font(.system(size: 35))
-													 VStack(alignment: .leading, spacing: 3) {
-															Text(item.title)
-																 .font(.headline)
-																 .fontWeight(.semibold)
-															Text(item.subtitle)
-																 .font(.subheadline)
-																 .foregroundStyle(Color(red: 0.4627, green: 0.8392, blue: 1.0))
-															Text(item.date, style: .date)
-																 .font(.caption)
-																 .foregroundColor(.gray)
-													 }
-													 Spacer()
-													 Text("$\(item.amount, specifier: "%.2f")")
-															.font(.subheadline)
-															.fontWeight(.semibold)
-												}
-
-										 }
-									}
-							 }
-							 .onDelete(perform: onDeletion)
-							 .listRowBackground(Color.gray60.opacity( 0.2))
-						}
-						.scrollContentBackground(.hidden)
-						.contentMargins(.top, 0)
-						.scrollIndicators(.hidden)
-						.padding(.bottom, 65)
-				 }
-						//				 .onAppear {
-						//						filteredList = sampleEarnings  // Show all earnings initially
-						//				 }
-						//				 .onChange(of: selectDate) { // Update when selectDate changes
-						//						filteredList = sampleEarnings.filter { $0.date >= selectDate && $0.date <= endDate }
-						//				 }
-						//				 .onChange(of: endDate) { // Update when endDate changes
-						//						filteredList = sampleEarnings.filter { $0.date >= selectDate && $0.date <= endDate }
-						//				 }
-				 .frame(maxWidth: .infinity)
-			}
-
-
-
-			func onDeletion(_ offSet: IndexSet) {
-				 for index in offSet {
-						sampleEarnings.remove(at: index)
-				 }
-			}
-			func categoryIcon(for category: EarningCategory) -> String {
-				 switch category {
-						case .tourney: return "🏨"
-						case .sponsor: return "🎾"
-						case .coaching: return "🏃"
-						case .other: return "📝"
-				 }
-			}
-	 }
-
-
-
-	 func onDeletion(_ offSet: IndexSet) {
-			for index in offSet {
-				 sampleExpenses.remove(at: index)
-			}
-	 }
-	 func categoryIcon(for category: ExpenseCategory) -> String {
-			switch category {
-				 case .travelingHousing: return "🏨"
-				 case .equipment: return "🎾"
-				 case .training: return "🏃"
-				 case .tournament: return "📝"
-			}
-	 }
-}
 
 
 
@@ -426,42 +408,9 @@ struct HeaderView: View {
 	 }
 }
 
-struct Filter: View {
-	 @State var selectDate: Date = Date()
-	 var body: some View {
-			VStack {
-				 HStack {
-						Button("Current Month") {
 
-						}
-						Spacer()
-				 }
-				 DatePicker(
-						"Start:",
-						selection: $selectDate,
-						displayedComponents: .date
-				 )
-				 DatePicker(
-						"End:",
-						selection: $selectDate,
-						displayedComponents: .date
-				 )
-
-
-
-			}
-			.padding(20)
-			.preferredColorScheme(.dark)
-
-	 }
-
-}
-
-
-
-
-
-#Preview {
-	 Home()
-}
+//
+//#Preview {
+//	 Home()
+//}
 

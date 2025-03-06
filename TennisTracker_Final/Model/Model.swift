@@ -15,6 +15,19 @@ enum ExpenseCategory: String, Codable, CaseIterable {
 	 case training = "Training"
 	 case tournament = "Tournament"
 }
+
+
+
+
+enum EarningCategory:String, Codable, CaseIterable{
+	 case tourney = "Tourney"
+	 case sponsor = "Sponsor"
+	 case coaching = "Coaching"
+	 case other = "Other"
+
+}
+
+
 @Model
 class Expense {
 	 var title: String
@@ -36,63 +49,27 @@ class Expense {
 	 }
 }
 
-var sampleExpenses: [Expense] = [
-	 Expense(title: "Hotel Stay", subtitle: "Tournament in Florida", date: Date(timeIntervalSinceNow: -86400 * 7), amount: 249.99, category: .travelingHousing), // March 03 - 7 days = Feb 24, 2025
-	 Expense(title: "New Racket", subtitle: "Wilson Pro Staff", date: Date(timeIntervalSinceNow: -86400 * 6), amount: 2000.95, category: .equipment),       // Feb 25, 2025
-	 Expense(title: "Private Lesson", subtitle: "Serve technique", date: Date(timeIntervalSinceNow: -86400 * 5), amount: 75.00, category: .training),     // Feb 26, 2025
-	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 4), amount: 45.00, category: .tournament),        // Feb 27, 2025
-	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 3), amount: 45.00, category: .tournament),        // Feb 28, 2025
-	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 2), amount: 45.00, category: .tournament),        // March 01, 2025
-	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 1), amount: 45.00, category: .tournament)         // March 02, 2025
-]
+@Model
+class Earning {
+	 var title: String
+	 var subtitle: String
+	 var date: Date
+	 var amount: Double
+	 var category: EarningCategory
 
-var travelingHousingTotal = sampleExpenses
-	 .filter { $0.category == .travelingHousing }
-	 .reduce(0) { $0 + $1.amount }
-
-var equipmentTotal = sampleExpenses
-	 .filter { $0.category == .equipment }
-	 .reduce(0) { $0 + $1.amount }
-
-var trainingTotal = sampleExpenses
-	 .filter { $0.category == .training }
-	 .reduce(0) { $0 + $1.amount }
-
-var tournamentTotal = sampleExpenses
-	 .filter { $0.category == .tournament }
-	 .reduce(0) { $0 + $1.amount }
-
-
-
-
-enum EarningCategory: String, CaseIterable, Identifiable {
-	 case tourney = "Tourney"
-	 case sponsor = "Sponsor"
-	 case coaching = "Coaching"
-	 case other = "Other"
-
-	 var id: String { rawValue }
-}
-class Earning: ObservableObject, Identifiable {
-	  var title: String
-	  var subtitle: String
-	  var date: Date
-	  var amount: Double
-    var category: EarningCategory
-	 init(title: String,
-				subtitle: String,
-				date: Date,
-				amount: Double,
-				category: EarningCategory) {
+	 init(title: String, subtitle: String, date: Date, amount: Double, category: EarningCategory) {
 			self.title = title
 			self.subtitle = subtitle
 			self.date = date
 			self.amount = amount
 			self.category = category
 	 }
-
-
 }
+
+
+
+
+
 
 var sampleEarnings: [Earning] = [
 	 Earning(
@@ -207,3 +184,27 @@ var sponsorTotal = sampleEarnings.filter { $0.category == .sponsor}.reduce(0) { 
 var coachingTotal = sampleEarnings.filter { $0.category == .coaching}.reduce(0) { $0 + $1.amount }
 var otherTotal = sampleEarnings.filter { $0.category == .other}.reduce(0) { $0 + $1.amount }
 
+var sampleExpenses: [Expense] = [
+	 Expense(title: "Hotel Stay", subtitle: "Tournament in Florida", date: Date(timeIntervalSinceNow: -86400 * 7), amount: 249.99, category: .travelingHousing), // March 03 - 7 days = Feb 24, 2025
+	 Expense(title: "New Racket", subtitle: "Wilson Pro Staff", date: Date(timeIntervalSinceNow: -86400 * 6), amount: 2000.95, category: .equipment),       // Feb 25, 2025
+	 Expense(title: "Private Lesson", subtitle: "Serve technique", date: Date(timeIntervalSinceNow: -86400 * 5), amount: 75.00, category: .training),     // Feb 26, 2025
+	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 4), amount: 45.00, category: .tournament),        // Feb 27, 2025
+	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 3), amount: 45.00, category: .tournament),        // Feb 28, 2025
+	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 2), amount: 45.00, category: .tournament),        // March 01, 2025
+	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 1), amount: 45.00, category: .tournament)         // March 02, 2025
+]
+var travelingHousingTotal = sampleExpenses
+	 .filter { $0.category == .travelingHousing }
+	 .reduce(0) { $0 + $1.amount }
+
+var equipmentTotal = sampleExpenses
+	 .filter { $0.category == .equipment }
+	 .reduce(0) { $0 + $1.amount }
+
+var trainingTotal = sampleExpenses
+	 .filter { $0.category == .training }
+	 .reduce(0) { $0 + $1.amount }
+
+var tournamentTotal = sampleExpenses
+	 .filter { $0.category == .tournament }
+	 .reduce(0) { $0 + $1.amount }

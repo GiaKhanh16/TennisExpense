@@ -11,7 +11,7 @@ import SwiftUI
 struct editExpense: View {
 	 @Environment(\.modelContext) private var context
 	 @Environment(\.dismiss) private var dismiss
-
+	 let isNewExpense: Bool
 	 @Bindable var expense: Expense
 
 	 var body: some View {
@@ -53,11 +53,16 @@ struct editExpense: View {
 						}
 
 						Section("Date") {
-							 DatePicker("", selection: $expense.date, displayedComponents: [.date])
+							 DatePicker("", selection: $expense.date, displayedComponents: .date)
 									.datePickerStyle(.graphical)
 									.labelsHidden()
+									.onTapGesture(count: 99) {
+									}
 						}
 				 }
+			}
+			.onTapGesture {
+				 hideKeyboard()
 			}
 			.scrollIndicators(.hidden)
 	 }
@@ -69,11 +74,23 @@ struct editExpense: View {
 
 			// Simplified save function since we're editing an existing expense
 	 func saveExpense() {
-				 // The @Bindable var expense is already bound to the model context,
-				 // so changes are automatically tracked. We just need to dismiss the view.
+			if isNewExpense {
+				 let newExpense = Expense(
+						title: expense.title,
+						subtitle: expense.subtitle,
+						date: expense.date,
+						amount: expense.amount,
+						category: expense.category
+				 )
+				 context.insert(newExpense)
+				 do {
+						try context.save()
+				 } catch {
+						print("Failed to save expense: \(error)")
+				 }
+			}
 			dismiss()
 	 }
-
 	 var formatter: NumberFormatter {
 			let formatter = NumberFormatter()
 			formatter.numberStyle = .decimal
