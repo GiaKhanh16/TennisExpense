@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E2A9F5792D836A3F00FD756F /* ContributionChart in Frameworks */ = {isa = PBXBuildFile; productRef = E2A9F5782D836A3F00FD756F /* ContributionChart */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		E27FF1C22D6F89A300796315 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,7 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E27FF1B12D6F89A100796315 /* TennisTracker_Final.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TennisTracker_Final.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E27FF1B12D6F89A100796315 /* TennisNumbers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TennisNumbers.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E27FF1C12D6F89A300796315 /* TennisTracker_FinalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TennisTracker_FinalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E27FF1CB2D6F89A300796315 /* TennisTracker_FinalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TennisTracker_FinalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2A9F5792D836A3F00FD756F /* ContributionChart in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,7 +90,7 @@
 		E27FF1B22D6F89A100796315 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E27FF1B12D6F89A100796315 /* TennisTracker_Final.app */,
+				E27FF1B12D6F89A100796315 /* TennisNumbers.app */,
 				E27FF1C12D6F89A300796315 /* TennisTracker_FinalTests.xctest */,
 				E27FF1CB2D6F89A300796315 /* TennisTracker_FinalUITests.xctest */,
 			);
@@ -112,9 +117,10 @@
 			);
 			name = TennisTracker_Final;
 			packageProductDependencies = (
+				E2A9F5782D836A3F00FD756F /* ContributionChart */,
 			);
 			productName = TennisTracker_Final;
-			productReference = E27FF1B12D6F89A100796315 /* TennisTracker_Final.app */;
+			productReference = E27FF1B12D6F89A100796315 /* TennisNumbers.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E27FF1C02D6F89A300796315 /* TennisTracker_FinalTests */ = {
@@ -195,6 +201,9 @@
 			);
 			mainGroup = E27FF1A82D6F89A100796315;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E2A9F5772D836A3F00FD756F /* XCRemoteSwiftPackageReference "SwiftUI-ContributionChart" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E27FF1B22D6F89A100796315 /* Products */;
 			projectDirPath = "";
@@ -399,9 +408,13 @@
 				DEVELOPMENT_TEAM = F858BJS7R5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "TennisTracker-Final-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = TennisNumbers;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = Launch.storyboard;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -410,10 +423,14 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "khanh.TennisTracker-Final";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = TennisNumbers;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Debug;
 		};
@@ -428,9 +445,13 @@
 				DEVELOPMENT_TEAM = F858BJS7R5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "TennisTracker-Final-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = TennisNumbers;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = Launch.storyboard;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -439,10 +460,14 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "khanh.TennisTracker-Final";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = TennisNumbers;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,7";
 			};
 			name = Release;
 		};
@@ -459,7 +484,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TennisTracker_Final.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TennisTracker_Final";
 			};
 			name = Debug;
@@ -477,7 +502,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TennisTracker_Final.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TennisTracker_Final";
 			};
 			name = Release;
@@ -493,7 +518,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_TARGET_NAME = TennisTracker_Final;
 			};
 			name = Debug;
@@ -509,7 +534,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_TARGET_NAME = TennisTracker_Final;
 			};
 			name = Release;
@@ -554,6 +579,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E2A9F5772D836A3F00FD756F /* XCRemoteSwiftPackageReference "SwiftUI-ContributionChart" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/VIkill33/SwiftUI-ContributionChart.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E2A9F5782D836A3F00FD756F /* ContributionChart */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2A9F5772D836A3F00FD756F /* XCRemoteSwiftPackageReference "SwiftUI-ContributionChart" */;
+			productName = ContributionChart;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E27FF1A92D6F89A100796315 /* Project object */;
 }

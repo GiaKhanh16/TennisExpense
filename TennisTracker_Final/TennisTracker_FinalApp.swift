@@ -9,6 +9,7 @@ struct TennisTracker_FinalApp: App {
 				 ContentView()
 
 			}
-			.modelContainer(for: [Expense.self, Earning.self])
+			.modelContainer(for: [Expense.self, Earning.self, serveModel.self])
 	 }
 }
+ 

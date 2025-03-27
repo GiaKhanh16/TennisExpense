@@ -21,7 +21,7 @@ struct editExpense: View {
 							 .font(.system(size:30))
 							 .bold()
 						Spacer()
-						Button("Save") {  // Changed from empty ToolbarItem to Button
+						Button("Save") {
 							 saveExpense()
 						}
 						.tint(.green)
@@ -53,7 +53,7 @@ struct editExpense: View {
 						}
 
 						Section("Date") {
-							 DatePicker("", selection: $expense.date, displayedComponents: .date)
+							 DatePicker("", selection: $expense.date,in: ...Date.now, displayedComponents: .date)
 									.datePickerStyle(.graphical)
 									.labelsHidden()
 									.onTapGesture(count: 99) {
@@ -67,12 +67,11 @@ struct editExpense: View {
 			.scrollIndicators(.hidden)
 	 }
 
-			// Renamed from addButtonDisable to isSaveDisabled for clarity
+	 
 	 var isSaveDisabled: Bool {
 			return expense.title.isEmpty || expense.subtitle.isEmpty || expense.amount == 0.0
 	 }
 
-			// Simplified save function since we're editing an existing expense
 	 func saveExpense() {
 			if isNewExpense {
 				 let newExpense = Expense(

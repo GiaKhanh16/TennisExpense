@@ -15,15 +15,9 @@ struct EarningTotal: Identifiable {
 	 let amount: Double
 }
 
-
-
-
 struct EarningChart: View {
 	 @Query var earnings: [Earning]
 	 let dateRange: DateRange
-
-
-
 
 	 var filteredList: [Earning] {
 			earnings.filter { earning in
@@ -33,15 +27,10 @@ struct EarningChart: View {
 
 	 init(dateRange: DateRange) {
 			self.dateRange = dateRange
-
 			self._earnings = Query(sort: [
 				 SortDescriptor(\Earning.date, order: .reverse)
 			], animation: .snappy)
 	 }
-
-
-
-
 
 	 var tourneyTotal: Double {
 			filteredList.filter { $0.category == .tourney }.reduce(0) { $0 + $1.amount }
@@ -59,7 +48,6 @@ struct EarningChart: View {
 			filteredList.filter { $0.category == .other }.reduce(0) { $0 + $1.amount }
 	 }
 
-
 	 var totalIncomeData: [String: Double] {
 			[
 				 "Tournament": tourneyTotal,
@@ -68,41 +56,66 @@ struct EarningChart: View {
 				 "Coaching": coachingTotal
 			]
 	 }
-//	 let earningData: [String: Double]
 
-			// Convert dictionary to array when the view is created
 	 private var earningArray: [EarningTotal] {
 			totalIncomeData.map { key, value in
 				 EarningTotal(category: key, amount: value)
 			}
 			.sorted { $0.category < $1.category }
 	 }
-	 @State private var animateBars: Bool = false // Track animation state
+
+	 @State private var animateBars: Bool = false
+
 	 var body: some View {
-			Chart(earningArray) { element in
-				 BarMark(
-						x: .value("Category", element.category),
-						y: .value("Amount", animateBars ? element.amount : 0) // Animate height
-				 )
-				 .foregroundStyle(by: .value("Name", element.category))
-				 .clipShape(RoundedRectangle(cornerRadius: 8))
-				 .annotation(position: .top) {
-						Text("\(element.amount, format: .currency(code: "USD"))")
-							 .font(.footnote)
-							 .padding(3)
-				 }
-			}
-			.chartXAxis(.hidden)
-			.chartYAxis(.hidden)
-			.frame(height: UIScreen.main.bounds.height * 0.3)
-			.padding(.horizontal,20)
-			.onAppear {
-				 withAnimation(.easeInOut) {
-						animateBars = true // Trigger animation
+			NavigationStack {
+				 if earningArray.isEmpty || earningArray.allSatisfy({ $0.amount == 0 }) {
+							 // Empty state view
+						VStack(spacing: 10) {
+							 Image(systemName: "chart.bar.fill")
+									.font(.system(size: 40))
+									.foregroundStyle(.blue.opacity(0.5))
+							 Text("No Earnings Yet")
+									.font(.headline)
+									.foregroundStyle(.gray)
+							 Text("Add some earnings to see your chart!")
+									.font(.subheadline)
+									.foregroundStyle(.gray.opacity(0.8))
+						}
+						.frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height * 0.27)
+						.padding(.horizontal, 20)
+						.opacity(animateBars ? 1 : 0) // Fade in effect
+						.onAppear {
+							 withAnimation(.easeIn(duration: 0.5)) {
+									animateBars = true
+							 }
+						}
+				 } else {
+							 // Chart view
+						Chart(earningArray) { element in
+							 BarMark(
+									x: .value("Category", element.category),
+									y: .value("Amount", animateBars ? element.amount : 0)
+							 )
+							 .foregroundStyle(by: .value("Name", element.category))
+							 .clipShape(RoundedRectangle(cornerRadius: 8))
+							 .annotation(position: .top) {
+									Text("\(element.amount, format: .currency(code: "USD"))")
+										 .font(.footnote)
+										 .padding(3)
+							 }
+						}
+						.chartXAxis(.hidden)
+						.chartYAxis(.hidden)
+						.frame(maxHeight: UIScreen.main.bounds.height * 0.27)
+						.padding(.horizontal, 20)
+						.onAppear {
+							 withAnimation(.easeInOut) {
+									animateBars = true
+							 }
+						}
 				 }
 			}
 	 }
-	 
 }
 
 

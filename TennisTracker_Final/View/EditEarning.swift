@@ -67,7 +67,7 @@ struct editEarning: View {
 						}
 
 						Section("Date") {
-							 DatePicker("", selection: $earning.date, displayedComponents: [.date])
+							 DatePicker("", selection: $earning.date,in: ...Date.now, displayedComponents: [.date])
 									.datePickerStyle(.graphical)
 									.labelsHidden()
 									.onTapGesture(count: 99) {
@@ -81,7 +81,6 @@ struct editEarning: View {
 			}
 	 }
 
-			// Renamed from addButtonDisable to isSaveDisabled for clarity
 	 var isSaveDisabled: Bool {
 			return earning.title.isEmpty || earning.subtitle.isEmpty || earning.amount == 0.0
 	 }

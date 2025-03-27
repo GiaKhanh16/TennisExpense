@@ -73,7 +73,7 @@ class Earning {
 
 var sampleEarnings: [Earning] = [
 	 Earning(
-			title: "Local Tennis Tournament",
+			title: "HCM ITF 25k",
 			subtitle: "Won 1st place",
 			date: Date(timeIntervalSinceNow: -86400 * 0), // Today: Mar 03, 2025
 			amount: 500.0,
@@ -185,14 +185,15 @@ var coachingTotal = sampleEarnings.filter { $0.category == .coaching}.reduce(0) 
 var otherTotal = sampleEarnings.filter { $0.category == .other}.reduce(0) { $0 + $1.amount }
 
 var sampleExpenses: [Expense] = [
-	 Expense(title: "Hotel Stay", subtitle: "Tournament in Florida", date: Date(timeIntervalSinceNow: -86400 * 7), amount: 249.99, category: .travelingHousing), // March 03 - 7 days = Feb 24, 2025
-	 Expense(title: "New Racket", subtitle: "Wilson Pro Staff", date: Date(timeIntervalSinceNow: -86400 * 6), amount: 2000.95, category: .equipment),       // Feb 25, 2025
+	 Expense(title: "New Racket", subtitle: "Wilson Pro Staff", date: Date(timeIntervalSinceNow: -86400 * 6), amount: 200.95, category: .equipment),       // Feb 25, 2025
 	 Expense(title: "Private Lesson", subtitle: "Serve technique", date: Date(timeIntervalSinceNow: -86400 * 5), amount: 75.00, category: .training),     // Feb 26, 2025
 	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 4), amount: 45.00, category: .tournament),        // Feb 27, 2025
 	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 3), amount: 45.00, category: .tournament),        // Feb 28, 2025
 	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 2), amount: 45.00, category: .tournament),        // March 01, 2025
 	 Expense(title: "Tournament Fee", subtitle: "Entry cost", date: Date(timeIntervalSinceNow: -86400 * 1), amount: 45.00, category: .tournament)         // March 02, 2025
 ]
+
+
 var travelingHousingTotal = sampleExpenses
 	 .filter { $0.category == .travelingHousing }
 	 .reduce(0) { $0 + $1.amount }

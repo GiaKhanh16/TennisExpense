@@ -12,7 +12,7 @@ struct IntroScreen: View {
 	 @AppStorage("isFirstTime") private var isFirstTime: Bool = true
 	 var body: some View {
 
-			Text("Features In Tennis Tracker:")
+			Text("Features In TennisNumbers :")
 				 .font(.largeTitle.bold())
 				 .multilineTextAlignment(.leading)
 				 .padding(.leading, -10)
@@ -21,7 +21,8 @@ struct IntroScreen: View {
 
 
 			VStack(alignment: .leading, spacing: 25, content: {
-				 PointView(symbol: "dollarsign", title: "Transactions", subTitle: "Keep track of your tennis expenses")
+				 PointView(symbol: "dollarsign", title: "Expenses and Earning", subTitle: "Keep track of your tennis expenses and earnings")
+				 PointView(symbol: "percent", title: "Serve Performance", subTitle: "Keep track of the most important stats in winning tennis matches")
 				 PointView(symbol: "figure.tennis", title: "Tournaments", subTitle: "Keep track of your potential earnings")
 				 PointView(symbol: "chart.bar.fill", title: "Visual Charts", subTitle: "View your transactions and earnings in a fun way")
 			})
@@ -29,7 +30,7 @@ struct IntroScreen: View {
 			.padding(.horizontal, 25)
 			Spacer(minLength: 25)
 			Button(action: {
-				 self.$isFirstTime.wrappedValue = false
+				 isFirstTime = false
 			}, label: {
 				 Text("Continue")
 						.fontWeight(.bold)
