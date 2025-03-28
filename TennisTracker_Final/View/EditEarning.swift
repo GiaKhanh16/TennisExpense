@@ -76,6 +76,7 @@ struct editEarning: View {
 						}
 				 }
 			}
+			.ignoresSafeArea(.keyboard)
 			.onTapGesture {
 				 hideKeyboard()
 			}
